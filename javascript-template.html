@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Asteroids</title>
+    <style></style>
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="700" height="500"></canvas>
+    <script> // Allows execution of javascript in html, so this is where I write my code script instead of markup
+        
+        const FPS = 30; // Frames per second
+        const SHIP_SIZE = 30; // Ship height in pixels
+        const TURN_SPEED_DEG = 180;
+        const TURN_SPEED = TURN_SPEED_DEG / 180 * Math.PI; // Turn Speed in Radians per second
+
+        /** @type {HTMLCanvasElement} */
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d"); // Get the drawing context
+
+        // ship
+        var ship = {
+            x: canvas.width/2,
+            y: canvas.height/2,
+            r: SHIP_SIZE/2,
+            a: 90 / 180 * Math.PI, // angle needs to be in radians, 90 degrees makes ship angle upwards
+            rot: 0
+        }
+
+        // Set up event handlers
+        document.addEventListener("keydown", keyDown);
+        document.addEventListener("keyup", keyUp);
+
+        function keyDown(/** @type {KeyboardEvent} */ ev){
+            switch(ev.keyCode){
+                case 37: // left arrow (rotate ship left)
+                    ship.rot = TURN_SPEED / FPS;
+                    break;
+                case 38: // up arrow (move ship forward)
+
+                    break;
+                case 39: // right arrow (rotate ship right)
+                    ship.rot = -TURN_SPEED / FPS;
+                    break;
+            }
+        }
+
+        // Set up game loop
+        setInterval(update, 1000/FPS);
+
+        function update() {
+            // draw  space
+            ctx.fillStyle = "black";
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+
+            // draw a triangular ship
+            ctx.strokeStyle = "white"
+            ctx.lineWidth = SHIP_SIZE/20;
+            ctx.beginPath();
+            ctx.moveTo( //Nose of ship
+                ship.x + 4/3 * ship.r * Math.cos(ship.a),
+                ship.y - 4/3 * ship.r * Math.sin(ship.a)
+            );
+            ctx.lineTo(// rear left of ship
+                ship.x - ship.r * (2/3 * Math.cos(ship.a) + Math.sin(ship.a)),
+                ship.y + ship.r * (2/3 *Math.sin(ship.a) - Math.cos(ship.a)),
+            );
+            ctx.lineTo(// rear right of ship from rear left
+                ship.x - ship.r * (2/3 *Math.cos(ship.a) - Math.sin(ship.a)),
+                ship.y + ship.r * (2/3 *Math.sin(ship.a) + Math.cos(ship.a)),
+            );
+            ctx.closePath();
+            ctx.stroke();
+
+            // move ship
+
+            // rotate ship
+            
+
+            //Centre Dot
+            ctx.fillStyle = "red";
+            ctx.fillRect(ship.x-3, ship.y-3, 6, 6);
+        };
+
+    </script>
+</body>
+
+</html>
